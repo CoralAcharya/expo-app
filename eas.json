@@ -9,7 +9,15 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "preview",
+      "developmentClient": false,
+      "android": {
+        "buildType": "apk"
+      },
+      "ios":{
+        "simulator": true
+      }
     },
     "production": {
       "autoIncrement": true
