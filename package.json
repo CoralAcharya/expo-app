@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "start:web": "expo start --web",
     "start:electron": "electron electron.js",
-    "package:desktop": "electron-packager . MyApp --platform=win32 --arch=x64 --overwrite"
+    "package:desktop": "electron-packager . MyApp --platform=win32 --arch=x64 --overwrite",
+    "build-run-electron": "expo export -p web && node modifyIndexDist.js && cd electron-app && npm start"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
