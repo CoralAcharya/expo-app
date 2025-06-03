@@ -8,6 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { Platform } from 'react-native';
 // My Changes Begin here
 import { PermissionsAndroid } from 'react-native';
 import { Alert, Image } from 'react-native';
@@ -16,36 +17,38 @@ import messaging from '@react-native-firebase/messaging';
 export default function App() {
   const opacity = useSharedValue(1);
 
-  // My changes begin here
-  const getToken = async() => {
-    const token = await messaging().getToken();
-    console.log("FCM Token is: ", token);
-  }
-  useEffect(() => {
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-    getToken();
-  })
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      // Alert.alert('Foreground Notification', JSON.stringify(remoteMessage.notification));
-      const { title, body} = remoteMessage.notification || {};
-      if (title || body) {
-        Alert.alert(
-          title || 'Notification',
-          body || '',
-          [
-            {
-              text: 'OK',
-              onPress: () => {},
-            },
-          ],
-          { cancelable: true }
-        );
-      }
-    });
+  if (Platform.OS === 'android' || Platform.OS === 'ios') {
+    // My changes begin here
+    const getToken = async() => {
+      const token = await messaging().getToken();
+      console.log("FCM Token is: ", token);
+    }
+    useEffect(() => {
+      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+      getToken();
+    })
+    useEffect(() => {
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+        // Alert.alert('Foreground Notification', JSON.stringify(remoteMessage.notification));
+        const { title, body} = remoteMessage.notification || {};
+        if (title || body) {
+          Alert.alert(
+            title || 'Notification',
+            body || '',
+            [
+              {
+                text: 'OK',
+                onPress: () => {},
+              },
+            ],
+            { cancelable: true }
+          );
+        }
+      });
 
-    return unsubscribe;
-  }, []);
+      return unsubscribe;
+    }, []);
+  }
   // My Changes end here
   useEffect(() => {
     // Loop fade animation: 1 -> 0 -> 1 ...
